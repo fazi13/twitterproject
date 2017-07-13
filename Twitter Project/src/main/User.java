@@ -15,12 +15,18 @@ public class User implements Comparable<User>, Comparator<User>{
 		id = UsersList.getNewUserID();
 		username = u;
 		groupID = null;
+		messages = new ArrayList<>();
+		followerIDs = new ArrayList<>();
+		followingIDs = new ArrayList<>();
 	}
 	
 	public User(int i, String u){
 		id = i;
 		username = u;
 		groupID = null;
+		messages = new ArrayList<>();
+		followerIDs = new ArrayList<>();
+		followingIDs = new ArrayList<>();
 	}
 
 	public int getUserID() {
