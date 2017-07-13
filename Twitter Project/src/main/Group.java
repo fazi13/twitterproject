@@ -6,15 +6,15 @@ import java.util.Comparator;
 public class Group implements Comparable<Group>, Comparator<Group>{
 	private int id;
 	private String groupname;
-	private int parentGroup;
+	private Group parentGroup;
 	private boolean subGroup;
-	private ArrayList<Integer> userIDs;
+	private ArrayList<User> users;
 	
 	public Group(String name){
 		id = GroupsList.getNewGroupID();
 		groupname = name;
 		//root group id = 0
-		parentGroup = 0;
+		parentGroup = null;
 		subGroup = false;
 	}
 	
@@ -23,7 +23,8 @@ public class Group implements Comparable<Group>, Comparator<Group>{
 		if(GroupsList.groupExists(pID)){
 			id = GroupsList.getNewGroupID();
 			groupname = name;
-			parentGroup = pID;
+			//convert id no to the group
+			parentGroup = GroupsList.getGroup(pID);
 			subGroup = true;
 		}else{
 			throw new GroupNotExistException();
@@ -34,7 +35,7 @@ public class Group implements Comparable<Group>, Comparator<Group>{
 		return groupname;
 	}
 	
-	public int getParent(){
+	public Group getParent(){
 		return parentGroup;
 	}
 	
@@ -42,22 +43,22 @@ public class Group implements Comparable<Group>, Comparator<Group>{
 		return subGroup;
 	}
 	
-	public ArrayList<Integer> getUsers(){
-		return userIDs;
+	public ArrayList<User> getUsers(){
+		return users;
 	}
 	
 	public void addUser(User u){
 		//first remove that user from the old group
-		int oldGroupID = u.getGroup();
-		Group oldGroup = GroupsList.getGroup(oldGroupID);
-		oldGroup.removeUser(u.getUserID());
+		Group oldGroup = u.getGroup();;
+		oldGroup.removeUser(u);
 		//now add that user to this group
-		userIDs.add(u.getUserID());
+		users.add(u);
+		u.setGroup(GroupsList.getGroup(id));
 	}
 	
-	public void removeUser(int id){
-		//remove user with that id
-		userIDs.remove(Integer.valueOf(id));
+	public void removeUser(User u){
+		users.remove(u);
+		u.setGroup(null);
 	}
 	
 	public int getGroupID(){
@@ -74,5 +75,9 @@ public class Group implements Comparable<Group>, Comparator<Group>{
 	public int compareTo(Group g) {
 		// TODO Auto-generated method stub
 		return id - g.getGroupID();
+	}
+	
+	public String toString(){
+		return groupname;
 	}
 }

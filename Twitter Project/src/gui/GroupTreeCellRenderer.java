@@ -13,7 +13,7 @@ import main.Group;
 public class GroupTreeCellRenderer implements TreeCellRenderer{
     private JLabel label;
 
-    GroupTreeCellRenderer() {
+    public GroupTreeCellRenderer() {
         label = new JLabel();
     }
     

@@ -6,6 +6,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
@@ -34,11 +36,13 @@ public class AdminWindow extends JFrame {
 	private JPanel contentPane;
 	private JTextField boxUserId;
 	private JTextField boxGroupId;
+	private static User selectedUser;
 
 	/**
 	 * Launch the application.
+	 * @throws NewUserException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws NewUserException {
 		//create root user and root group
 		User u = new User("root");
 		UsersList.addUser(u);
@@ -76,14 +80,28 @@ public class AdminWindow extends JFrame {
 		
 		JLabel lblGroupId = new JLabel("Parent Group:");
 		lblGroupId.setBounds(400, 53, 108, 20);
-		contentPane.add(lblGroupId);
+		contentPane.add(lblGroupId);	
+		
+		JLabel lblSelectedUserId = new JLabel("Selected User Id:");
+		lblSelectedUserId.setBounds(400, 111, 134, 20);
+		contentPane.add(lblSelectedUserId);
+		
+		JLabel lblSelectedId = new JLabel("(0)");
+		lblSelectedId.setBounds(549, 111, 69, 20);
+		contentPane.add(lblSelectedId);
 		
 		JButton btnOpenUserView = new JButton("Open User View");
 		btnOpenUserView.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(selectedUser != null){
+					new ShowUserWindow(selectedUser).setVisible(true);
+				}else{
+					//error pls select a user
+					JOptionPane.showMessageDialog(null, "Please select a user", "User Required", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
-		btnOpenUserView.setBounds(400, 89, 363, 29);
+		btnOpenUserView.setBounds(400, 155, 363, 29);
 		contentPane.add(btnOpenUserView);
 		
 		boxUserId = new JTextField();
@@ -137,15 +155,33 @@ public class AdminWindow extends JFrame {
 		scrollPane.setBounds(15, 18, 363, 310);
 		contentPane.add(scrollPane);
 		
+		//tree
 		JTree tree = new JTree();
 		tree.setModel(new DefaultTreeModel(
 			new DefaultMutableTreeNode("root") {
 				{
-					add(new DefaultMutableTreeNode(UsersList.getUser(0).getUsername()));
+					//adds root user
+					add(new DefaultMutableTreeNode(UsersList.getUser(0)));
 				}
 			}
 		));
 		scrollPane.setViewportView(tree);
+		
+		//click event for tree
+		tree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
+		    @Override
+		    public void valueChanged(TreeSelectionEvent e) {
+		    	DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+		    	if(selectedNode == null){
+		    		//do nothing
+		    	}else if(selectedNode.getUserObject() instanceof User){
+			    	selectedUser = (User) selectedNode.getUserObject();
+			    	lblSelectedId.setText(Integer.toString(selectedUser.getUserID()));
+		    	}else{
+		    		lblSelectedId.setText("not a user");
+		    	}
+		    }
+		});
 		
 		JButton btnAddUser = new JButton("Add User");
 		btnAddUser.addActionListener(new ActionListener() {
@@ -169,7 +205,7 @@ public class AdminWindow extends JFrame {
 						//add group to tree
 						DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
 						DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
-						root.add(new DefaultMutableTreeNode(username));
+						root.add(new DefaultMutableTreeNode(u));
 						model.reload();
 					}
 				}catch(NumberFormatException e1){
@@ -206,7 +242,7 @@ public class AdminWindow extends JFrame {
 						//add group to tree
 						DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
 						DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
-						root.add(new DefaultMutableTreeNode(groupname));
+						root.add(new DefaultMutableTreeNode(g));
 						model.reload();
 					}
 				}catch(GroupNotExistException e1){
@@ -217,5 +253,9 @@ public class AdminWindow extends JFrame {
 		});
 		btnAddGroup.setBounds(599, 49, 164, 29);
 		contentPane.add(btnAddGroup);
+	}
+	
+	public static User getSelectedUser(){
+		return selectedUser;
 	}
 }

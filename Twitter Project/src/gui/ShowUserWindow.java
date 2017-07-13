@@ -1,93 +1,102 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import java.awt.FlowLayout;
 
-import javax.swing.JFrame;
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import main.User;
+
 import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.JList;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.JTextArea;
+import javax.swing.JScrollPane;
+import javax.swing.JList;
+import javax.swing.JTextField;
 
-public class ShowUserWindow extends JFrame {
+public class ShowUserWindow extends JDialog {
 
-	private JPanel contentPane;
-	private JTextField textField_1;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ShowUserWindow frame = new ShowUserWindow();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private final JPanel contentPanel = new JPanel();
+	private JTextField tweetBox;
+	private User curUser;
 
 	/**
-	 * Create the frame.
+	 * Create the dialog.
 	 */
-	public ShowUserWindow() {
+	public ShowUserWindow(User u) {
 		setTitle("User View");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 500);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
-		JLabel lblUserId = new JLabel("User id to follow: ");
-		lblUserId.setBounds(15, 16, 154, 20);
-		contentPane.add(lblUserId);
-		
-		JButton btnFollowUser = new JButton("Follow User");
-		btnFollowUser.setBounds(298, 12, 115, 29);
-		contentPane.add(btnFollowUser);
-		
-		textField_1 = new JTextField();
-		textField_1.setBounds(151, 13, 132, 26);
-		contentPane.add(textField_1);
-		textField_1.setColumns(10);
-		
-		JLabel lblCurrentlyFollowing = new JLabel("Currently Following:");
-		lblCurrentlyFollowing.setBounds(15, 56, 154, 20);
-		contentPane.add(lblCurrentlyFollowing);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(15, 92, 398, 115);
-		contentPane.add(scrollPane);
-		
-		JList followersList = new JList();
-		scrollPane.setViewportView(followersList);
-		
-		JTextArea textArea = new JTextArea();
-		textArea.setBounds(15, 223, 268, 22);
-		contentPane.add(textArea);
-		
-		JButton btnPostTweet = new JButton("Post Tweet");
-		btnPostTweet.setBounds(298, 223, 115, 29);
-		contentPane.add(btnPostTweet);
-		
-		JLabel lblNewsFeed = new JLabel("News Feed:");
-		lblNewsFeed.setBounds(15, 261, 115, 20);
-		contentPane.add(lblNewsFeed);
-		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(15, 301, 398, 127);
-		contentPane.add(scrollPane_1);
-		
-		JList newsFeedList = new JList();
-		scrollPane_1.setViewportView(newsFeedList);
+		curUser = u;
+		setBounds(100, 100, 450, 743);
+		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(null);
+		{
+			JLabel lblCurrentUser = new JLabel("Current User: ");
+			lblCurrentUser.setBounds(15, 16, 101, 20);
+			contentPanel.add(lblCurrentUser);
+		}
+		{
+			JLabel lblUsername = new JLabel("username");
+			lblUsername.setBounds(118, 16, 69, 20);
+			contentPanel.add(lblUsername);
+		}
+		{
+			JLabel lblUserIdTo = new JLabel("User id to follow: ");
+			lblUserIdTo.setBounds(97, 48, 128, 20);
+			contentPanel.add(lblUserIdTo);
+		}
+		{
+			JTextArea textArea = new JTextArea();
+			textArea.setBounds(240, 48, 43, 22);
+			contentPanel.add(textArea);
+		}
+		{
+			JButton btnFollowUser = new JButton("Follow User");
+			btnFollowUser.setBounds(298, 44, 115, 29);
+			contentPanel.add(btnFollowUser);
+		}
+		{
+			JLabel lblCurrentlyFollowing = new JLabel("Currently following: ");
+			lblCurrentlyFollowing.setBounds(15, 74, 146, 20);
+			contentPanel.add(lblCurrentlyFollowing);
+		}
+		{
+			JScrollPane scrollPane = new JScrollPane();
+			scrollPane.setBounds(15, 110, 398, 118);
+			contentPanel.add(scrollPane);
+			{
+				JList followingList = new JList();
+				scrollPane.setViewportView(followingList);
+			}
+		}
+		{
+			tweetBox = new JTextField();
+			tweetBox.setBounds(15, 244, 268, 26);
+			contentPanel.add(tweetBox);
+			tweetBox.setColumns(10);
+		}
+		{
+			JButton btnPostTweet = new JButton("Post Tweet");
+			btnPostTweet.setBounds(298, 244, 115, 29);
+			contentPanel.add(btnPostTweet);
+		}
+		{
+			JLabel lblNewsFeed = new JLabel("News Feed:");
+			lblNewsFeed.setBounds(15, 286, 82, 20);
+			contentPanel.add(lblNewsFeed);
+		}
+		{
+			JScrollPane scrollPane = new JScrollPane();
+			scrollPane.setBounds(15, 322, 398, 331);
+			contentPanel.add(scrollPane);
+			{
+				JList list = new JList();
+				scrollPane.setViewportView(list);
+			}
+		}
 	}
+
 }

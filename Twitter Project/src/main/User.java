@@ -6,33 +6,21 @@ import java.util.Comparator;
 public class User implements Comparable<User>, Comparator<User>{
 	private int id;
 	private String username;
-	private int groupID;
+	private Group groupID;
 	private ArrayList<Message> messages;
 	private ArrayList<Integer> followerIDs;
 	private ArrayList<Integer> followingIDs;
 	
-	//store users in a text file that way users will not be lost when exiting program
-	//line 1 = id
-	//line 2 = username
-	//line 3 = group id
-	//line 4 = follower ids
-	//line 5 = following ids
-	//new file for messages
 	public User(String u){
 		id = UsersList.getNewUserID();
 		username = u;
-		groupID = 0;
+		groupID = null;
 	}
 	
-	public User(int i, String u) throws NewUserException{
-		//if user exists already then throw an exception
-		if(UsersList.userExists(i)){
-			throw new NewUserException();
-		}else{
-			id = UsersList.getNewUserID();
-			username = u;
-			groupID = 0;
-		}
+	public User(int i, String u){
+		id = i;
+		username = u;
+		groupID = null;
 	}
 
 	public int getUserID() {
@@ -56,11 +44,15 @@ public class User implements Comparable<User>, Comparator<User>{
 	}
 	
 	public void joinGroup(int id){
-		groupID = id;
+		groupID = GroupsList.getGroup(id);
 	}
 	
-	public int getGroup(){
+	public Group getGroup(){
 		return groupID;
+	}
+	
+	public void setGroup(Group g){
+		groupID = g;
 	}
 
 	public void newMessage(String newMessage) {
@@ -109,6 +101,13 @@ public class User implements Comparable<User>, Comparator<User>{
 		}
 		return followers;
 	}
+	
+	public boolean equals(User u){
+		if(id == u.getUserID()){
+			return true;
+		}
+		return false;
+	}
 
 	@Override
 	public int compare(User u1, User u2) {
@@ -120,5 +119,9 @@ public class User implements Comparable<User>, Comparator<User>{
 	public int compareTo(User u) {
 		// TODO Auto-generated method stub
 		return id - u.getUserID();
+	}
+	
+	public String toString(){
+		return username;
 	}
 }
