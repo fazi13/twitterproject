@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JTree;
@@ -23,6 +24,8 @@ import main.User;
 import main.UsersList;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -57,6 +60,7 @@ public class AdminWindow extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	@SuppressWarnings("serial")
 	public AdminWindow() {
 		setTitle("Admin Control Panel");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -75,62 +79,12 @@ public class AdminWindow extends JFrame {
 		contentPane.add(lblGroupId);
 		
 		JButton btnOpenUserView = new JButton("Open User View");
+		btnOpenUserView.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btnOpenUserView.setBounds(400, 89, 363, 29);
 		contentPane.add(btnOpenUserView);
-		
-		JButton btnAddUser = new JButton("Add User");
-		btnAddUser.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int userID = 0;
-				String input = boxUserId.getText().trim();
-				try{
-					//if no user id input, generate a new user id
-					if(input.equals("")){
-						userID = UsersList.getNewUserID();
-					}else{
-						userID = Integer.parseInt(input);
-					}
-					//open new user box
-					String username = JOptionPane.showInputDialog("Enter username");
-					User u = new User(userID, username);
-					UsersList.addUser(u);
-				}catch(NumberFormatException e1){
-					JOptionPane.showMessageDialog(null, "User id must be an integer", "Input Error", JOptionPane.ERROR_MESSAGE);
-					e1.printStackTrace(System.out);
-				}catch (NewUserException e2){
-					JOptionPane.showMessageDialog(null, "User id " + userID + " already exists", "User ID Error", JOptionPane.ERROR_MESSAGE);
-					e2.printStackTrace();
-				}
-			}
-		});
-		btnAddUser.setBounds(599, 12, 164, 29);
-		contentPane.add(btnAddUser);
-		
-		JButton btnAddGroup = new JButton("Add Group");
-		btnAddGroup.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int parentGroup = 0;
-				String input = boxGroupId.getText().trim();
-				try{
-					//get the parent group id
-					if(input.equals("")){
-						//if empty assume 0 or root
-						parentGroup = 0;
-					}else{
-						parentGroup = Integer.parseInt(input);
-					}
-					//open new group box
-					String groupname = JOptionPane.showInputDialog("Enter group name");
-					Group g = new Group(groupname, parentGroup);
-					GroupsList.addGroup(g);
-				}catch(GroupNotExistException e1){
-					JOptionPane.showMessageDialog(null, "Parent group " + parentGroup + " does not exist", "Group ID Error", JOptionPane.ERROR_MESSAGE);
-					e1.printStackTrace(System.out);
-				}
-			}
-		});
-		btnAddGroup.setBounds(599, 49, 164, 29);
-		contentPane.add(btnAddGroup);
 		
 		boxUserId = new JTextField();
 		boxUserId.setBounds(523, 13, 61, 26);
@@ -183,15 +137,85 @@ public class AdminWindow extends JFrame {
 		scrollPane.setBounds(15, 18, 363, 310);
 		contentPane.add(scrollPane);
 		
-		JTree Groups = new JTree();
-		Groups.setModel(new DefaultTreeModel(
+		JTree tree = new JTree();
+		tree.setModel(new DefaultTreeModel(
 			new DefaultMutableTreeNode("root") {
 				{
-					//add root user
 					add(new DefaultMutableTreeNode(UsersList.getUser(0).getUsername()));
 				}
 			}
 		));
-		scrollPane.setViewportView(Groups);
+		scrollPane.setViewportView(tree);
+		
+		JButton btnAddUser = new JButton("Add User");
+		btnAddUser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int userID = 0;
+				String input = boxUserId.getText().trim();
+				try{
+					//if no user id input, generate a new user id
+					if(input.equals("")){
+						userID = UsersList.getNewUserID();
+					}else{
+						userID = Integer.parseInt(input);
+					}
+					//open new user box
+					String username = "";
+					username = JOptionPane.showInputDialog("Enter username");
+					if(username != null){
+						User u = new User(userID, username);
+						UsersList.addUser(u);
+						//add user to tree
+						//add group to tree
+						DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+						DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+						root.add(new DefaultMutableTreeNode(username));
+						model.reload();
+					}
+				}catch(NumberFormatException e1){
+					JOptionPane.showMessageDialog(null, "User id must be an integer", "Input Error", JOptionPane.ERROR_MESSAGE);
+					e1.printStackTrace(System.out);
+				}catch (NewUserException e2){
+					JOptionPane.showMessageDialog(null, "User id " + userID + " already exists", "User ID Error", JOptionPane.ERROR_MESSAGE);
+					e2.printStackTrace();
+				}
+			}
+		});
+		btnAddUser.setBounds(599, 12, 164, 29);
+		contentPane.add(btnAddUser);
+		
+		JButton btnAddGroup = new JButton("Add Group");
+		btnAddGroup.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int parentGroup = 0;
+				String input = boxGroupId.getText().trim();
+				try{
+					//get the parent group id
+					if(input.equals("")){
+						//if empty assume 0 or root
+						parentGroup = 0;
+					}else{
+						parentGroup = Integer.parseInt(input);
+					}
+					//open new group box
+					String groupname = JOptionPane.showInputDialog("Enter group name");
+					if(groupname != null){
+						Group g = new Group(groupname, parentGroup);
+						GroupsList.addGroup(g);
+						
+						//add group to tree
+						DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+						DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+						root.add(new DefaultMutableTreeNode(groupname));
+						model.reload();
+					}
+				}catch(GroupNotExistException e1){
+					JOptionPane.showMessageDialog(null, "Parent group " + parentGroup + " does not exist", "Group ID Error", JOptionPane.ERROR_MESSAGE);
+					e1.printStackTrace(System.out);
+				}
+			}
+		});
+		btnAddGroup.setBounds(599, 49, 164, 29);
+		contentPane.add(btnAddGroup);
 	}
 }

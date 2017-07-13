@@ -7,6 +7,7 @@ public class Group implements Comparable<Group>, Comparator<Group>{
 	private int id;
 	private String groupname;
 	private int parentGroup;
+	private boolean subGroup;
 	private ArrayList<Integer> userIDs;
 	
 	public Group(String name){
@@ -14,6 +15,7 @@ public class Group implements Comparable<Group>, Comparator<Group>{
 		groupname = name;
 		//root group id = 0
 		parentGroup = 0;
+		subGroup = false;
 	}
 	
 	public Group(String name, int pID) throws GroupNotExistException{
@@ -22,6 +24,7 @@ public class Group implements Comparable<Group>, Comparator<Group>{
 			id = GroupsList.getNewGroupID();
 			groupname = name;
 			parentGroup = pID;
+			subGroup = true;
 		}else{
 			throw new GroupNotExistException();
 		}
@@ -33,6 +36,10 @@ public class Group implements Comparable<Group>, Comparator<Group>{
 	
 	public int getParent(){
 		return parentGroup;
+	}
+	
+	public boolean isSubGroup(){
+		return subGroup;
 	}
 	
 	public ArrayList<Integer> getUsers(){
