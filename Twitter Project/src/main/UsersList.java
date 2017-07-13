@@ -4,7 +4,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class UsersList {
+	private static UsersList firstInstance = null;
 	private static ArrayList<User> allUsers = new ArrayList<User>(0);
+	
+	private UsersList(){
+		
+	}
+	
+	public static UsersList getInstance(){
+		if(firstInstance == null){
+			firstInstance = new UsersList();
+		}
+		return firstInstance;
+	}
 	
 	public static void addUser(User u) throws NewUserException{
 		//if user exists already then throw an exception

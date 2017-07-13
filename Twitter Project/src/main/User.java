@@ -61,10 +61,9 @@ public class User implements Comparable<User>, Comparator<User>{
 		groupID = g;
 	}
 
-	public void newMessage(String newMessage) {
+	public void newMessage(Message m) {
 		//this is a user created message
 		//add to own message list
-		Message m = new Message(id, newMessage);
 		messages.add(m);
 		//now add to followers messages
 		updateFollowers(m);
@@ -75,11 +74,11 @@ public class User implements Comparable<User>, Comparator<User>{
 			//u = follower user
 			User u = UsersList.getUser(followerIDs.get(i));
 			//show new message on u
-			u.newMessage(m);
+			u.updateMessage(m);
 		}
 	}
 	
-	private void newMessage(Message m){
+	private void updateMessage(Message m){
 		//do not add new msg to followers since this is not a user created message
 		messages.add(m);
 	}

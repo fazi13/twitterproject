@@ -52,6 +52,6 @@ public class Message {
 			//remove divide by 0 error
 			return 0;
 		}
-		return (totalPositive / (double) totalMsgs);
+		return (totalPositive / (double) totalMsgs)*100;
 	}
 }
