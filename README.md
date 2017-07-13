@@ -38,3 +38,4 @@ Using the show user panel
         1. only shows tweets after the user started to follow them. eg: started following at 11:01 messages before 11:01 are not shown
     3. refreshed when user adds a new tweet
         1. to show tweets from following's must refresh window
+Observer pattern was not implemented with Java's Observable, update method was created based on followers
