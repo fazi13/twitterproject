@@ -29,7 +29,12 @@ public class UsersList {
 	}
 	
 	public static User getUser(int id){
-		return allUsers.get(id);
+		for(int i = 0; i < allUsers.size(); i++){
+			if(allUsers.get(i).getUserID() == id){
+				return allUsers.get(i);
+			}
+		}
+		return null;
 	}
 	
 	public static boolean userExists(int id){

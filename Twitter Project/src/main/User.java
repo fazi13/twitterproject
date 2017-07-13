@@ -73,15 +73,23 @@ public class User implements Comparable<User>, Comparator<User>{
 		}
 	}
 	
-	public void newMessage(Message m){
+	private void newMessage(Message m){
 		//do not add new msg to followers since this is not a user created message
 		messages.add(m);
 	}
 	
-	public void startFollowing(int userID){
-		User u = UsersList.getUser(userID);
-		u.addFollower(id);
-		followingIDs.add(userID);
+	public void startFollowing(int userID) throws UserNotExistException, SelfFollowException{
+		//check if that user exists
+		if(!UsersList.userExists(userID)){
+			throw new UserNotExistException();
+		//check if following itself
+		}else if(id == userID){
+			throw new SelfFollowException();
+		}else{
+			User u = UsersList.getUser(userID);
+			u.addFollower(id);
+			followingIDs.add(userID);
+		}
 	}
 	
 	public void addFollower(int userID){
