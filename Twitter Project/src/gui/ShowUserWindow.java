@@ -71,6 +71,7 @@ public class ShowUserWindow extends JDialog {
 						int uid = 0;
 						try{
 							uid = Integer.parseInt(followID.getText());
+							//start following
 							curUser.startFollowing(uid);
 							User following = UsersList.getUser(uid);
 							//update following list
@@ -107,6 +108,7 @@ public class ShowUserWindow extends JDialog {
 			JList following = new JList();
 			scrollPane.setViewportView(following);	
 			following.setModel(fm);
+			addAllFollowing(curUser.getFollowings());
 		
 		
 			tweetBox = new JTextField();
@@ -143,26 +145,46 @@ public class ShowUserWindow extends JDialog {
 			contentPanel.add(scrollPane1);
 			
 			//newsfeed
-			JList newsfeed;
+			JList newsfeed = new JList();
 			//add all msgs on open
-			ArrayList<Message> messages = curUser.getMessages();
-			if(messages.size() == 0){
-				//if no msgs empty
-				newsfeed = new JList();
-			}else{
-				Message[] msgs = messages.toArray(new Message[messages.size()]);
-				//System.out.println("populating newsfeed with " + msgs[0]);
-				newsfeed = new JList(msgs);
-			}
+			addAllMessages(curUser.getMessages());
 			scrollPane1.setViewportView(newsfeed);
 			newsfeed.setModel(dm);
+			
+			JLabel lblUserId = new JLabel("User id:");
+			lblUserId.setBounds(305, 16, 69, 20);
+			contentPanel.add(lblUserId);
+			
+			JLabel lblId = new JLabel(Integer.toString(curUser.getUserID()));
+			lblId.setBounds(389, 16, 24, 20);
+			contentPanel.add(lblId);
 	}
 	
 	private void addMessages(Message m){
-		dm.addElement(m);
+		dm.add(0, m);
+	}
+	
+	private void addAllMessages(ArrayList<Message> messages){
+		if(messages.size() == 0){
+			//if no msgs do nothing
+		}else{
+			//add each message from newest(end) to oldest(first
+			for(int i = messages.size()-1; i >= 0; i--){
+				dm.addElement(messages.get(i));
+			}
+		}
 	}
 	
 	private void addFollowing(User u1){
 		fm.addElement(u1);
+	}
+	
+	private void addAllFollowing(ArrayList<Integer> follUserID){
+		for(int i = 0; i < follUserID.size(); i++){
+			//get user from their id
+			User u1 = UsersList.getUser(follUserID.get(i));
+			//add to list
+			fm.addElement(u1);
+		}
 	}
 }
