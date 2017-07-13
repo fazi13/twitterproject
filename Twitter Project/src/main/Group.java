@@ -1,24 +1,30 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
-public class Group {
+public class Group implements Comparable<Group>, Comparator<Group>{
 	private int id;
 	private String groupname;
 	private int parentGroup;
 	private ArrayList<Integer> userIDs;
 	
-	public Group(int i, String name){
-		id = i;
+	public Group(String name){
+		id = GroupsList.getNewGroupID();
 		groupname = name;
 		//root group id = 0
 		parentGroup = 0;
 	}
 	
-	public Group(int i, String name, int pID){
-		id = i;
-		groupname = name;
-		parentGroup = pID;
+	public Group(String name, int pID) throws GroupNotExistException{
+		//check if parent id exists
+		if(GroupsList.groupExists(pID)){
+			id = GroupsList.getNewGroupID();
+			groupname = name;
+			parentGroup = pID;
+		}else{
+			throw new GroupNotExistException();
+		}
 	}
 	
 	public String getGroupname(){
@@ -45,5 +51,21 @@ public class Group {
 	public void removeUser(int id){
 		//remove user with that id
 		userIDs.remove(Integer.valueOf(id));
+	}
+	
+	public int getGroupID(){
+		return id;
+	}
+
+	@Override
+	public int compare(Group g1, Group g2) {
+		// TODO Auto-generated method stub
+		return g1.getGroupID() - g2.getGroupID();
+	}
+
+	@Override
+	public int compareTo(Group g) {
+		// TODO Auto-generated method stub
+		return id - g.getGroupID();
 	}
 }

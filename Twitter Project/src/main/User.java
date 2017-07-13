@@ -1,8 +1,9 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
-public class User {
+public class User implements Comparable<User>, Comparator<User>{
 	private int id;
 	private String username;
 	private int groupID;
@@ -10,10 +11,28 @@ public class User {
 	private ArrayList<Integer> followerIDs;
 	private ArrayList<Integer> followingIDs;
 	
+	//store users in a text file that way users will not be lost when exiting program
+	//line 1 = id
+	//line 2 = username
+	//line 3 = group id
+	//line 4 = follower ids
+	//line 5 = following ids
+	//new file for messages
 	public User(String u){
 		id = UsersList.getNewUserID();
 		username = u;
 		groupID = 0;
+	}
+	
+	public User(int i, String u) throws NewUserException{
+		//if user exists already then throw an exception
+		if(UsersList.userExists(i)){
+			throw new NewUserException();
+		}else{
+			id = UsersList.getNewUserID();
+			username = u;
+			groupID = 0;
+		}
 	}
 
 	public int getUserID() {
@@ -89,5 +108,17 @@ public class User {
 			}
 		}
 		return followers;
+	}
+
+	@Override
+	public int compare(User u1, User u2) {
+		// TODO Auto-generated method stub
+		return u1.getUserID() - u2.getUserID();
+	}
+
+	@Override
+	public int compareTo(User u) {
+		// TODO Auto-generated method stub
+		return id - u.getUserID();
 	}
 }

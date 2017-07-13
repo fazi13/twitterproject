@@ -8,8 +8,8 @@ public class Message {
 	private String msg;
 	private boolean positive;
 	private final String[] KEYWORDS = {"good", ":)", "cool", "great", "happy", "excellent"};
-	private static int totalMsgs;
-	private static int totalPositive;
+	private static int totalMsgs = 0;
+	private static int totalPositive = 0;
 	
 	public Message(int i, String m){
 		userID = i;
@@ -48,6 +48,10 @@ public class Message {
 	}
 	
 	public static double getTotalPositive(){
+		if(totalMsgs == 0){
+			//remove divide by 0 error
+			return 0;
+		}
 		return (totalPositive / (double) totalMsgs);
 	}
 }
