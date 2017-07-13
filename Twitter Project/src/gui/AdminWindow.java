@@ -82,7 +82,7 @@ public class AdminWindow extends JFrame {
 		btnAddUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int userID = 0;
-				String input = boxUserId.getText();
+				String input = boxUserId.getText().trim();
 				try{
 					//if no user id input, generate a new user id
 					if(input.equals("")){
@@ -110,7 +110,7 @@ public class AdminWindow extends JFrame {
 		btnAddGroup.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int parentGroup = 0;
-				String input = boxGroupId.getText();
+				String input = boxGroupId.getText().trim();
 				try{
 					//get the parent group id
 					if(input.equals("")){
@@ -184,6 +184,14 @@ public class AdminWindow extends JFrame {
 		contentPane.add(scrollPane);
 		
 		JTree Groups = new JTree();
+		Groups.setModel(new DefaultTreeModel(
+			new DefaultMutableTreeNode("root") {
+				{
+					//add root user
+					add(new DefaultMutableTreeNode(UsersList.getUser(0).getUsername()));
+				}
+			}
+		));
 		scrollPane.setViewportView(Groups);
 	}
 }
