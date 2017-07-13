@@ -5,12 +5,15 @@ import java.util.ArrayList;
 public class User {
 	private int id;
 	private String username;
+	private int groupID;
 	private ArrayList<Message> messages;
 	private ArrayList<Integer> followerIDs;
+	private ArrayList<Integer> followingIDs;
 	
 	public User(String u){
 		id = UsersList.getNewUserID();
 		username = u;
+		groupID = 0;
 	}
 
 	public int getUserID() {
@@ -31,6 +34,14 @@ public class User {
 
 	public ArrayList<Message> getMessages() {
 		return messages;
+	}
+	
+	public void joinGroup(int id){
+		groupID = id;
+	}
+	
+	public int getGroup(){
+		return groupID;
 	}
 
 	public void newMessage(String newMessage) {
@@ -59,6 +70,7 @@ public class User {
 	public void startFollowing(int userID){
 		User u = UsersList.getUser(userID);
 		u.addFollower(id);
+		followingIDs.add(userID);
 	}
 	
 	public void addFollower(int userID){
