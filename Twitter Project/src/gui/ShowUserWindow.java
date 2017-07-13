@@ -8,13 +8,18 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import main.SelfFollowException;
 import main.User;
+import main.UserNotExistException;
 
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ShowUserWindow extends JDialog {
 
@@ -39,7 +44,7 @@ public class ShowUserWindow extends JDialog {
 			contentPanel.add(lblCurrentUser);
 		}
 		{
-			JLabel lblUsername = new JLabel("username");
+			JLabel lblUsername = new JLabel(curUser.getUsername());
 			lblUsername.setBounds(118, 16, 69, 20);
 			contentPanel.add(lblUsername);
 		}
@@ -49,14 +54,32 @@ public class ShowUserWindow extends JDialog {
 			contentPanel.add(lblUserIdTo);
 		}
 		{
-			JTextArea textArea = new JTextArea();
-			textArea.setBounds(240, 48, 43, 22);
-			contentPanel.add(textArea);
-		}
-		{
-			JButton btnFollowUser = new JButton("Follow User");
-			btnFollowUser.setBounds(298, 44, 115, 29);
-			contentPanel.add(btnFollowUser);
+			JTextArea followID = new JTextArea();
+			followID.setBounds(240, 48, 43, 22);
+			contentPanel.add(followID);
+			{
+				JButton btnFollowUser = new JButton("Follow User");
+				btnFollowUser.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						int uid = 0;
+						try{
+							uid = Integer.parseInt(followID.getText());
+							curUser.startFollowing(uid);
+						}catch(NumberFormatException e1){
+							//error please enter an int
+							JOptionPane.showMessageDialog(null, "Please enter valid user id", "Input Error", JOptionPane.ERROR_MESSAGE);
+						} catch (UserNotExistException e1) {
+							//error user does not exist
+							JOptionPane.showMessageDialog(null, "User id: " + Integer.toString(uid) + " does not exist", "Input Error", JOptionPane.ERROR_MESSAGE);
+						} catch (SelfFollowException e1) {
+							//cant follow urself
+							JOptionPane.showMessageDialog(null, "You can't follow yourself", "Following Error", JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				});
+				btnFollowUser.setBounds(298, 44, 115, 29);
+				contentPanel.add(btnFollowUser);
+			}
 		}
 		{
 			JLabel lblCurrentlyFollowing = new JLabel("Currently following: ");
@@ -80,6 +103,11 @@ public class ShowUserWindow extends JDialog {
 		}
 		{
 			JButton btnPostTweet = new JButton("Post Tweet");
+			btnPostTweet.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					curUser.newMessage(tweetBox.getText());
+				}
+			});
 			btnPostTweet.setBounds(298, 244, 115, 29);
 			contentPanel.add(btnPostTweet);
 		}
