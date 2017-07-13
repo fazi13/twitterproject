@@ -73,7 +73,7 @@ public class User implements Comparable<User>, Comparator<User>{
 		for(int i = 0; i < followerIDs.size(); i++){
 			//u = follower user
 			User u = UsersList.getUser(followerIDs.get(i));
-			//show new message on u
+			//show new message on follower user
 			u.updateMessage(m);
 		}
 	}
@@ -101,18 +101,8 @@ public class User implements Comparable<User>, Comparator<User>{
 		followerIDs.add(userID);
 	}
 	
-	public String showFollowers(){
-		//print string of followers eg: bob, jake, chris
-		String followers = "";
-		//get username based on each userid
-		for(int i = 0; i < followerIDs.size(); i++){
-			followers += UsersList.getUsername(followerIDs.get(i));
-			if(i < followerIDs.size()-1){
-				//add commas except for last follower
-				followers += ", ";
-			}
-		}
-		return followers;
+	public ArrayList<Integer> getFollowings(){
+		return followingIDs;
 	}
 	
 	public boolean equals(User u){

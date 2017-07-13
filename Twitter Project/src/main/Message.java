@@ -52,6 +52,8 @@ public class Message {
 			//remove divide by 0 error
 			return 0;
 		}
-		return (totalPositive / (double) totalMsgs)*100;
+		double total = (totalPositive / (double) totalMsgs)*100;
+		double rounded = Math.round(total * 100.0) / 100.0;
+		return rounded;
 	}
 }
