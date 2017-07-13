@@ -32,7 +32,7 @@ public class Message {
 		//split the message into an array of Strings seperated by a space
 		String[] str = msg.split(" ");
 		//convert array to a list to use contains
-		ArrayList<String> list = (ArrayList<String>) Arrays.asList(str);
+		ArrayList<String> list = new ArrayList<>(Arrays.asList(str));
 		//now check if str array contains keywords
 		for(int i = 0; i < KEYWORDS.length; i++){
 			if(list.contains(KEYWORDS[i])){
