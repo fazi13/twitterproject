@@ -158,6 +158,15 @@ public class ShowUserWindow extends JDialog {
 			JLabel lblId = new JLabel(Integer.toString(curUser.getUserID()));
 			lblId.setBounds(389, 16, 24, 20);
 			contentPanel.add(lblId);
+			
+			JButton btnRefresh = new JButton("Refresh");
+			btnRefresh.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					addAllMessages(curUser.getMessages());
+				}
+			});
+			btnRefresh.setBounds(298, 282, 115, 29);
+			contentPanel.add(btnRefresh);
 	}
 	
 	private void addMessages(Message m){
@@ -165,6 +174,7 @@ public class ShowUserWindow extends JDialog {
 	}
 	
 	private void addAllMessages(ArrayList<Message> messages){
+		dm.clear();
 		if(messages.size() == 0){
 			//if no msgs do nothing
 		}else{
@@ -180,6 +190,7 @@ public class ShowUserWindow extends JDialog {
 	}
 	
 	private void addAllFollowing(ArrayList<Integer> follUserID){
+		fm.clear();
 		for(int i = 0; i < follUserID.size(); i++){
 			//get user from their id
 			User u1 = UsersList.getUser(follUserID.get(i));
