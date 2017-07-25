@@ -41,3 +41,5 @@ Using the show user panel
 
 
 Observer pattern was not implemented with Java's Observable, update method was created based on followers
+
+Added project v2 features. User id is unique by design from the add user id button, but added a check anyways. Checks username for spaces since id can only store an int and an error is outputted if a user enters a non-int value for id.
