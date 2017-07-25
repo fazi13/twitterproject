@@ -57,4 +57,42 @@ public class UsersList {
 		}
 		return false;
 	}
+	
+	//returns true if id not valid
+	public static boolean checkIDs(){
+		for(int i = 0; i < allUsers.size(); i++){
+			User u1 = allUsers.get(i);
+			if(u1.getUsername().equals(u1.getUsername().trim())){
+				//if username == username.trim then no spaces do nothing
+			}else{
+				//not equal to trim so contains a space
+				return true;
+			}
+			for(int j = 0; j < allUsers.size(); j++){
+				if(i == j){
+					//do nothing: don't check against itself
+				}else{
+					//check if id number used already
+					User u2 = allUsers.get(j);
+					if(u1.getUserID() == u2.getUserID()){
+						//same id return true
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	public static User getLastUpdatedUser(){
+		User u1 = allUsers.get(0);
+		for(int i = 1; i < allUsers.size(); i++){
+			User u2 = allUsers.get(i);
+			if(u2.getLastUpdated() > u1.getLastUpdated()){
+				//swap u1 with u2 if it is newer
+				u1 = u2;
+			}
+		}
+		return u1;
+	}
 }

@@ -8,6 +8,7 @@ public class Group implements Comparable<Group>, Comparator<Group>{
 	private String groupname;
 	private Group parentGroup;
 	private boolean subGroup;
+	private long creationTime;
 	private ArrayList<User> users;
 	
 	public Group(String name){
@@ -17,6 +18,7 @@ public class Group implements Comparable<Group>, Comparator<Group>{
 		parentGroup = null;
 		subGroup = false;
 		users = new ArrayList<>();
+		creationTime = System.currentTimeMillis();
 	}
 	
 	public Group(String name, int pID) throws GroupNotExistException{
@@ -28,6 +30,7 @@ public class Group implements Comparable<Group>, Comparator<Group>{
 			parentGroup = GroupsList.getGroup(pID);
 			subGroup = true;
 			users = new ArrayList<>();
+			creationTime = System.currentTimeMillis();
 		}else{
 			throw new GroupNotExistException();
 		}
@@ -39,6 +42,10 @@ public class Group implements Comparable<Group>, Comparator<Group>{
 	
 	public Group getParent(){
 		return parentGroup;
+	}
+	
+	public long getCreationTime(){
+		return creationTime;
 	}
 	
 	public boolean isSubGroup(){

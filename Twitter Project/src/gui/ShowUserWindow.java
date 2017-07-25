@@ -22,7 +22,9 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 
 public class ShowUserWindow extends JDialog {
@@ -39,6 +41,7 @@ public class ShowUserWindow extends JDialog {
 	public ShowUserWindow(User myUser) {
 		setTitle("User View");
 		curUser = myUser;
+		String lastUpdated = "";
 		setBounds(100, 100, 450, 743);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -51,18 +54,18 @@ public class ShowUserWindow extends JDialog {
 		
 		
 			JLabel lblUsername = new JLabel(curUser.getUsername());
-			lblUsername.setBounds(118, 16, 69, 20);
+			lblUsername.setBounds(106, 16, 69, 20);
 			contentPanel.add(lblUsername);
 		
 		
 			JLabel lblUserIdTo = new JLabel("User id to follow: ");
-			lblUserIdTo.setBounds(97, 48, 128, 20);
+			lblUserIdTo.setBounds(227, 44, 128, 20);
 			contentPanel.add(lblUserIdTo);
 		
 		
 			//follow user
 			JTextArea followID = new JTextArea();
-			followID.setBounds(240, 48, 43, 22);
+			followID.setBounds(370, 44, 43, 22);
 			contentPanel.add(followID);
 			{
 				JButton btnFollowUser = new JButton("Follow User");
@@ -90,7 +93,7 @@ public class ShowUserWindow extends JDialog {
 						followID.setText("");
 					}
 				});
-				btnFollowUser.setBounds(298, 44, 115, 29);
+				btnFollowUser.setBounds(298, 70, 115, 29);
 				contentPanel.add(btnFollowUser);
 			}
 		
@@ -98,6 +101,12 @@ public class ShowUserWindow extends JDialog {
 			JLabel lblCurrentlyFollowing = new JLabel("Currently following: ");
 			lblCurrentlyFollowing.setBounds(15, 74, 146, 20);
 			contentPanel.add(lblCurrentlyFollowing);
+			
+			//get last updated	
+			lastUpdated = getLastUpdated();
+			JLabel lbllastUpdated = new JLabel("(last updated " + lastUpdated + ")");
+			lbllastUpdated.setBounds(106, 286, 177, 20);
+			contentPanel.add(lbllastUpdated);
 		
 		//followings box
 		
@@ -129,6 +138,10 @@ public class ShowUserWindow extends JDialog {
 					
 					//clear textbox after posting
 					tweetBox.setText("");
+					
+					//also update last updated
+					String lastUpdated = getLastUpdated();
+					lbllastUpdated.setText("(last updated " + lastUpdated + ")");
 				}
 			});
 			btnPostTweet.setBounds(298, 244, 115, 29);
@@ -158,11 +171,28 @@ public class ShowUserWindow extends JDialog {
 			JLabel lblId = new JLabel(Integer.toString(curUser.getUserID()));
 			lblId.setBounds(389, 16, 24, 20);
 			contentPanel.add(lblId);
+
+			//get creation time for cur user
+			long millis = curUser.getCreationTime();
+			//convert to a date
+			SimpleDateFormat df = new SimpleDateFormat("MM/dd/yy HH:mm");
+			Date date = new Date(millis);
+			String created = df.format(date.getTime());
+			JLabel lblTime = new JLabel(created);
+			lblTime.setBounds(106, 44, 123, 20);
+			contentPanel.add(lblTime);
 			
+			JLabel lblNewLabel = new JLabel("Created on:");
+			lblNewLabel.setBounds(15, 44, 101, 20);
+			contentPanel.add(lblNewLabel);
+		
 			JButton btnRefresh = new JButton("Refresh");
 			btnRefresh.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					addAllMessages(curUser.getMessages());
+					//also update last updated text
+					String lastUpdated = getLastUpdated();
+					lbllastUpdated.setText("(last updated " + lastUpdated + ")");
 				}
 			});
 			btnRefresh.setBounds(298, 282, 115, 29);
@@ -171,6 +201,13 @@ public class ShowUserWindow extends JDialog {
 	
 	private void addMessages(Message m){
 		dm.add(0, m);
+	}
+	
+	private String getLastUpdated(){
+		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yy HH:mm");
+		long millis = curUser.getLastUpdated();
+		Date lastDate = new Date(millis);
+		return df.format(lastDate.getTime());
 	}
 	
 	private void addAllMessages(ArrayList<Message> messages){

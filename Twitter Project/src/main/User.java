@@ -7,6 +7,8 @@ public class User implements Comparable<User>, Comparator<User>{
 	private int id;
 	private String username;
 	private Group groupID;
+	private long creationTime;
+	private long lastUpdated;
 	private ArrayList<Message> messages;
 	private ArrayList<Integer> followerIDs;
 	private ArrayList<Integer> followingIDs;
@@ -18,6 +20,8 @@ public class User implements Comparable<User>, Comparator<User>{
 		messages = new ArrayList<>();
 		followerIDs = new ArrayList<>();
 		followingIDs = new ArrayList<>();
+		creationTime = System.currentTimeMillis();
+		lastUpdated = creationTime;
 	}
 	
 	public User(int i, String u){
@@ -27,6 +31,8 @@ public class User implements Comparable<User>, Comparator<User>{
 		messages = new ArrayList<>();
 		followerIDs = new ArrayList<>();
 		followingIDs = new ArrayList<>();
+		creationTime = System.currentTimeMillis();
+		lastUpdated = creationTime;
 	}
 
 	public int getUserID() {
@@ -35,6 +41,14 @@ public class User implements Comparable<User>, Comparator<User>{
 
 	public String getUsername() {
 		return username;
+	}
+	
+	public long getCreationTime(){
+		return creationTime;
+	}
+	
+	public long getLastUpdated(){
+		return lastUpdated;
 	}
 
 	public void setUsername(String u) {
@@ -65,6 +79,7 @@ public class User implements Comparable<User>, Comparator<User>{
 		//this is a user created message
 		//add to own message list
 		messages.add(m);
+		lastUpdated = System.currentTimeMillis();
 		//now add to followers messages
 		updateFollowers(m);
 	}
@@ -81,6 +96,7 @@ public class User implements Comparable<User>, Comparator<User>{
 	private void updateMessage(Message m){
 		//do not add new msg to followers since this is not a user created message
 		messages.add(m);
+		lastUpdated = System.currentTimeMillis();
 	}
 	
 	public void startFollowing(int userID) throws UserNotExistException, SelfFollowException{

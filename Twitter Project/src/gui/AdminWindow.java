@@ -155,7 +155,6 @@ public class AdminWindow extends JFrame {
 		scrollPane.setBounds(15, 18, 363, 310);
 		contentPane.add(scrollPane);
 		
-		//tree
 		JTree tree = new JTree();
 		tree.setModel(new DefaultTreeModel(
 			new DefaultMutableTreeNode("root") {
@@ -168,20 +167,20 @@ public class AdminWindow extends JFrame {
 		scrollPane.setViewportView(tree);
 		
 		//click event for tree
-		tree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
-		    @Override
-		    public void valueChanged(TreeSelectionEvent e) {
-		    	DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-		    	if(selectedNode == null){
-		    		//do nothing
-		    	}else if(selectedNode.getUserObject() instanceof User){
-			    	selectedUser = (User) selectedNode.getUserObject();
-			    	lblSelectedId.setText(Integer.toString(selectedUser.getUserID()));
-		    	}else{
-		    		lblSelectedId.setText("not a user");
-		    	}
-		    }
-		});
+				tree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
+				    @Override
+				    public void valueChanged(TreeSelectionEvent e) {
+				    	DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+				    	if(selectedNode == null){
+				    		//do nothing
+				    	}else if(selectedNode.getUserObject() instanceof User){
+					    	selectedUser = (User) selectedNode.getUserObject();
+					    	lblSelectedId.setText(Integer.toString(selectedUser.getUserID()));
+				    	}else{
+				    		lblSelectedId.setText("not a user");
+				    	}
+				    }
+				});
 		
 		JButton btnAddUser = new JButton("Add User");
 		btnAddUser.addActionListener(new ActionListener() {
@@ -253,6 +252,31 @@ public class AdminWindow extends JFrame {
 		});
 		btnAddGroup.setBounds(599, 49, 164, 29);
 		contentPane.add(btnAddGroup);
+		
+		JButton btnCheckIds = new JButton("Check IDs");
+		btnCheckIds.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(UsersList.checkIDs()){
+					//if true show duplicate exists
+					JOptionPane.showMessageDialog(null, "Invalid user id exists", "User ID Error", JOptionPane.ERROR_MESSAGE);
+				}else{
+					//no duplicates
+					JOptionPane.showMessageDialog(null, "No invalid user id exists");
+				}
+			}
+		});
+		btnCheckIds.setBounds(599, 84, 164, 29);
+		contentPane.add(btnCheckIds);
+		
+		JButton btnNewButton = new JButton("Last Updated");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				User lastUser = UsersList.getLastUpdatedUser();
+				JOptionPane.showMessageDialog(null, "Last update made by user id: " + lastUser.getUserID());
+			}
+		});
+		btnNewButton.setBounds(599, 120, 164, 29);
+		contentPane.add(btnNewButton);
 	}
 	
 	public static User getSelectedUser(){
